@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - NextGenVote</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">NextGen<span>Vote</span></a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>Voter Registration</h2>
+
+            <div id="msgBox"></div>
+
+            <form action="RegisterServlet" method="POST">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="As per official documents" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="name@domain.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="voterId">Voter ID</label>
+                    <input type="text" id="voterId" name="voterId" class="form-control" placeholder="Your unique Voter ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Create a strong password" required>
+                </div>
+                <button type="submit" class="btn mt-3">Register</button>
+            </form>
+            <p class="text-center mt-4">
+                Already registered? <a href="login.html" class="link">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            document.getElementById('msgBox').innerHTML = '<div class="alert alert-error">' + error + '</div>';
+        }
+    </script>
+</body>
+</html>

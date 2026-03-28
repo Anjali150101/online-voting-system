@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NextGenVote</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">NextGen<span>Vote</span></a>
+        <div class="nav-links">
+            <a href="LogoutServlet">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <h2>Voting Dashboard</h2>
+        <p class="text-muted mb-4">Select your preferred candidate and cast your vote securely. Note: You can only vote once.</p>
+        
+        <div id="msgBox"></div>
+
+        <div class="candidate-grid" id="candidateList">
+            <p>Loading candidates...</p>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const success = urlParams.get('success');
+        const msgBox = document.getElementById('msgBox');
+
+        if (error) {
+            msgBox.innerHTML = '<div class="alert alert-error">' + error + '</div>';
+        } else if (success) {
+            msgBox.innerHTML = '<div class="alert alert-success">' + success + '</div>';
+        }
+
+        fetch('CandidateServlet')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('candidateList');
+                if (data.length === 0) {
+                    list.innerHTML = '<p>No candidates available at the moment.</p>';
+                    return;
+                }
+                
+                list.innerHTML = '';
+                data.forEach(candidate => {
+                    const card = `
+                        <div class="candidate-card">
+                            <div style="font-size:3rem; margin-bottom:1rem;">${candidate.symbol}</div>
+                            <h3>${candidate.name}</h3>
+                            <p>${candidate.party}</p>
+                            <form action="VoteServlet" method="POST">
+                                <input type="hidden" name="candidateId" value="${candidate.id}">
+                                <button type="submit" class="btn">Vote</button>
+                            </form>
+                        </div>
+                    `;
+                    list.innerHTML += card;
+                });
+            })
+            .catch(err => {
+                document.getElementById('candidateList').innerHTML = '<p class="text-danger">Failed to load candidates.</p>';
+            });
+    </script>
+</body>
+</html>
